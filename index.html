@@ -1,57 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iReporter | Login</title>
+    <link rel="stylesheet" type="text/css" href="UI/static/css/style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="bg-blue">
+            <div class="logo">
+                <span>i</span>
+                <span>R</span>
+                <span>e</span>
+                <span>p</span>
+                <span>o</span>
+                <span>r</span>
+                <span>t</span>
+                <span>e</span>
+                <span>r</span>
+            </div>
+        </header>
+        <div class="main-page">
+            <div class="login-register-container border-round-lg">
+                <form class="vertical-form" id="login-form" method="post">
+                    <fieldset>
+                        <legend>Login Here!</legend>
+                        <input type="text" id="userName" placeholder='ENTER USERNAME' class="input-control" value="admin" required>
+                        <input type="password" id="password" placeholder="ENTER PASSWORD" class="input-control"
+                            required value="iReporter123">
+                        <input type="submit" name="btn-login" class="btn bg-blue text-white btn-block" value="Login">
+                        <hr>
+                        <p class="text-blue">No Account yet!</p>
+                        <a href='./UI/user/signup.html' class="btn btn-small text-white bg-green">Click here to sign up</a>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <footer class="bg-blue">
+            <div class='footer'>
+                iReporter&nbsp;&copy;2018
+            </div>
+        </footer>
+    </div>
+</body>
 
 <script>
-// // var url = 'http://127.0.0.1:5000/api/v2/auth/login';
-var myStorage = window.localStorage;
-var accessToken = "none";
-var userData = {
-    "email": "micheas@gmail.com",
-    "firstname": "kagimu",
-    "lastname": "Davis",
-    "othernames": "",
-    "password":"Password123",
-    "phoneNumber": "0772752450",
-    "username": "kalardhur"
+document.getElementById("login-form").onsubmit=function() {
+    // // var url = 'http://127.0.0.1:5000/api/v2/auth/login';
+    var myStorage = window.localStorage;
+    var accessToken = "none";
+    var userData = {
+        username: document.getElementById("userName").value,
+        password: document.getElementById("password").value
+
+    }
+
+      fetch('https://ireporterapiv2.herokuapp.com/api/v2/auth/login', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json',
+              "Access-Control-Allow-Origin":"*"
+
+            }, 
+            body: JSON.stringify(userData),
+            mode: "cors"
+
+      }).then(response => {
+        // var resStatus = response.status; 
+        return response.json();
+
+      }).then( jsonResponse =>  {
+        // console.log(resStatus);
+        document.write(JSON.stringify(jsonResponse));
+        localStorage.setItem('access_token', jsonResponse.data[0].token);
+
+
+      }).catch( error =>  {
+        console.log(error);
+      })
+    var bearerToken = "Bearer " + localStorage.getItem('access_token');
+
+
+    fetch('https://ireporterapiv2.herokuapp.com/api/v2/red-flags',{
+          method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json',
+
+              'Authorization': bearerToken,
+
+            }, 
+          // mode: "cors"
+      })
+    .then(response => response.json())
+    .then(json => console.log(JSON.stringify(json)))
 }
-
-  fetch('https://ireporterapiv2.herokuapp.com/api/v2/auth/login', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json',
-          "Access-Control-Allow-Origin":"*"
-
-        }, 
-        body: JSON.stringify(userData),
-        mode: "cors"
-
-  }).then(response => {
-    // var resStatus = response.status; 
-    return response.json();
-
-  }).then( jsonResponse =>  {
-    // console.log(resStatus);
-    document.write(JSON.stringify(jsonResponse));
-    localStorage.setItem('access_token', jsonResponse.data[0].token);
-    
-
-  }).catch( error =>  {
-    console.log(error);
-  })
-var bearerToken = "Bearer " + localStorage.getItem('access_token');
-
-
-fetch('https://ireporterapiv2.herokuapp.com/api/v2/red-flags',{
-      method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json',
-          
-          'Authorization': bearerToken,
-
-        }, 
-      // mode: "cors"
-  })
-.then(response => response.json())
-.then(json => console.log(JSON.stringify(json)))
 </script>
+
+</html>
+
   
