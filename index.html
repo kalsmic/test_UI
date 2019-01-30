@@ -1,14 +1,16 @@
+
 <script>
 // // var url = 'http://127.0.0.1:5000/api/v2/auth/login';
+var myStorage = window.localStorage;
 var accessToken = "none";
 var userData = {
-    "email": "michealss@gmail.com",
+    "email": "micheas@gmail.com",
     "firstname": "kagimu",
     "lastname": "Davis",
     "othernames": "",
     "password":"Password123",
-    "phoneNumber": "0772462450",
-    "username": "kalarthur"
+    "phoneNumber": "0772752450",
+    "username": "kalardhur"
 }
 
   fetch('https://ireporterapiv2.herokuapp.com/api/v2/auth/login', {
@@ -29,13 +31,27 @@ var userData = {
   }).then( jsonResponse =>  {
     // console.log(resStatus);
     document.write(JSON.stringify(jsonResponse));
-    var accessToken = JSON.stringify(jsonResponse.data[0].token)
+    localStorage.setItem('access_token', jsonResponse.data[0].token);
     
 
   }).catch( error =>  {
     console.log(error);
   })
+var bearerToken = "Bearer " + localStorage.getItem('access_token');
 
-  
+
+fetch('https://ireporterapiv2.herokuapp.com/api/v2/red-flags',{
+      method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+          
+          'Authorization': bearerToken,
+
+        }, 
+      // mode: "cors"
+  })
+.then(response => response.json())
+.then(json => console.log(JSON.stringify(json)))
 </script>
   
