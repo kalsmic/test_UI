@@ -1,0 +1,41 @@
+<script>
+// // var url = 'http://127.0.0.1:5000/api/v2/auth/login';
+var accessToken = "none";
+var userData = {
+    "email": "michealss@gmail.com",
+    "firstname": "kagimu",
+    "lastname": "Davis",
+    "othernames": "",
+    "password":"Password123",
+    "phoneNumber": "0772462450",
+    "username": "kalarthur"
+}
+
+  fetch('https://ireporterapiv2.herokuapp.com/api/v2/auth/login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+          "Access-Control-Allow-Origin":"*"
+
+        }, 
+        body: JSON.stringify(userData),
+        mode: "cors"
+
+  }).then(response => {
+    // var resStatus = response.status; 
+    return response.json();
+
+  }).then( jsonResponse =>  {
+    // console.log(resStatus);
+    document.write(JSON.stringify(jsonResponse));
+    var accessToken = JSON.stringify(jsonResponse.data[0].token)
+    
+
+  }).catch( error =>  {
+    console.log(error);
+  })
+
+  
+</script>
+  
